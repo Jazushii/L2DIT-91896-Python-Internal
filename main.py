@@ -26,4 +26,17 @@ list_inpt = {
     "itm_returned" : "6",
 }
 
+for qstn, num in list_qstn.items():
+    frm_qstn = tk.Frame(wdnw_srvy, relief=tk.RIDGE, borderwidth=3)
+    frm_qstn.grid(row=num, column=0, padx=5, pady=5, sticky="w")
+    lbl_qstn = tk.Label(frm_qstn, text=qstn)
+    lbl_qstn.pack()
+
+for inpt, num in list_inpt.items():
+    frm_inpt = tk.Frame(wdnw_srvy, borderwidth=3)
+    frm_inpt.grid(row=num, column=1, padx=5, pady=5, sticky="w")
+    inpt = tk.Entry(frm_inpt)
+    inpt.pack()
+
+
 wdnw_srvy.mainloop()
