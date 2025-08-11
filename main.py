@@ -13,9 +13,9 @@ list_qstn = {
     "Middle name:" : "1",
     "Family name:" : "2",
     "Item name:" : "3",
-    "Quantity of items:" : "4",
-    "Date the item/s will be issued:" : "5",
-    "Data the item/s will be returned" : "6",
+    "Quantity of\nitems:" : "4",
+    "Date the item/s\nwill be issued:" : "5",
+    "Data the item/s\nwill be returned" : "6",
 }
 # assigns the variable "list_qstn" (list_question) to the list of questions
 # and their respective rows in the first column
@@ -36,9 +36,23 @@ list_inpt = {
 
 for qstn, num in list_qstn.items():
     frm_qstn = tk.Frame(wdnw_srvy, relief=tk.RIDGE, borderwidth=3)
+    # assigns the variable "frm_qstn" (frame_question) as the frame to put the labels in
+    # its "master" is wdnw_srvy
+    # its relief (border style) is set to ridged
+    # its borderwidth is set to 3
     frm_qstn.grid(row=num, column=0, padx=5, pady=5, sticky="w")
-    lbl_qstn = tk.Label(frm_qstn, text=qstn)
+    # puts frm_qstn into a grid
+    # where its located in row "num", which is in the list_qstn list
+    # and in column 0 (the first column)
+    # with x and y padding to 5
+    # and sticks to "w" (west / left side)
+    lbl_qstn = tk.Label(frm_qstn, text=qstn, width=12)
+    # assigns the variable "lbl_qstn" (label_question) as the label
+    # its "master" is frm_qstn
+    # its text is "qstn", which is in the list_qstn list
+    # its width is set to 12
     lbl_qstn.pack()
+    # runs lbl_qstn
 # loops for the amount of items in list_qstn,
 # and replaces the label text as the first given variable in the list,
 # and replaces the row number as the second given variable in the list
@@ -46,11 +60,17 @@ for qstn, num in list_qstn.items():
 for inpt, num in list_inpt.items():
     frm_inpt = tk.Frame(wdnw_srvy, borderwidth=3)
     frm_inpt.grid(row=num, column=1, padx=5, pady=5, sticky="w")
-    inpt = tk.Entry(frm_inpt)
+    inpt = tk.Entry(frm_inpt, width=20)
     inpt.pack()
 # loops for the amount of items in list_inpt,
 # and replaces the entry name as the first given variable in the list,
 # and replaces the row number as the second given variable in the list
 
+frm_sbmt = tk.Frame(wdnw_srvy, borderwidth=3)
+frm_sbmt.grid(row=7, column=1, padx=5, pady=5, sticky="e")
+btn_sbmt = tk.Button(frm_sbmt, text="Confirm Submission")
+btn_sbmt.pack()
+# creates a button to confirm submissions
+
 wdnw_srvy.mainloop()
-# loops and runs the window "wdnw_srvy"
+# loops and runs wdnw_srvy
