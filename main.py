@@ -1,11 +1,11 @@
 import tkinter as tk
 import random as rdm
 
-wdnw_srvy = tk.Tk()
+wndw_srvy = tk.Tk()
 # assigns the variable "wdnw_srvy" (window_survey) to a window
 
-wdnw_srvy.rowconfigure([0, 1, 2, 3, 4, 5, 6], minsize=25)
-wdnw_srvy.columnconfigure([0, 1], minsize=25)
+wndw_srvy.rowconfigure([0, 1, 2, 3, 4, 5, 6], minsize=25)
+wndw_srvy.columnconfigure([0, 1], minsize=25)
 # configures the grid (rows and columns)
 
 list_qstn = {
@@ -35,7 +35,7 @@ list_inpt = {
 # entry name : row number
 
 for qstn, num in list_qstn.items():
-    frm_qstn = tk.Frame(wdnw_srvy, relief=tk.RIDGE, borderwidth=3)
+    frm_qstn = tk.Frame(wndw_srvy, relief=tk.RIDGE, borderwidth=3)
     # assigns the variable "frm_qstn" (frame_question) as the frame to put the labels in
     # its "master" is wdnw_srvy
     # its relief (border style) is set to ridged
@@ -58,7 +58,7 @@ for qstn, num in list_qstn.items():
 # and replaces the row number as the second given variable in the list
 
 for inpt, num in list_inpt.items():
-    frm_inpt = tk.Frame(wdnw_srvy, borderwidth=3)
+    frm_inpt = tk.Frame(wndw_srvy, borderwidth=3)
     frm_inpt.grid(row=num, column=1, padx=5, pady=5, sticky="w")
     inpt = tk.Entry(frm_inpt, width=20)
     inpt.pack()
@@ -66,11 +66,17 @@ for inpt, num in list_inpt.items():
 # and replaces the entry name as the first given variable in the list,
 # and replaces the row number as the second given variable in the list
 
-frm_sbmt = tk.Frame(wdnw_srvy, borderwidth=3)
-frm_sbmt.grid(row=7, column=1, padx=5, pady=5, sticky="e")
-btn_sbmt = tk.Button(frm_sbmt, text="Confirm Submission")
+def cnfrm_sbmt():
+    wndw_cnfrm = tk.Tk()
+    wndw_cnfrm.mainloop()
+# defines the command "cnfrm_sbmt" which creates a separate window
+
+frm_sbmt = tk.Frame(wndw_srvy, borderwidth=3)
+frm_sbmt.grid(row=7, column=1, padx=5, pady=5, sticky="we")
+btn_sbmt = tk.Button(frm_sbmt, text="Confirm Submission", command=cnfrm_sbmt)
+# "comman=cnfrm_sbmt" makes the button "btn_sbmt" excute "cnfrm_sbmt"
 btn_sbmt.pack()
 # creates a button to confirm submissions
 
-wdnw_srvy.mainloop()
+wndw_srvy.mainloop()
 # loops and runs wdnw_srvy
