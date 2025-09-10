@@ -1,6 +1,16 @@
 import tkinter as tk
 import random as rdm
 
+class Customer:
+    def __init__(self, nm_given, nm_mid, nm_last, itm_nm, itm_num, itm_issued, itm_returned):
+        self.nm_given = nm_given
+        self.nm_mid = nm_mid
+        self.nm_last = nm_last
+        self.itm_nm = itm_nm
+        self.itm_num = itm_num
+        self.itm_issued = itm_issued
+        self.itm_returned = itm_returned
+
 wndw_srvy = tk.Tk()
 # assigns the variable "wdnw_srvy" (window_survey) to a window
 
@@ -34,8 +44,6 @@ list_ent = {
 # and their respective rows in the second column
 # entry name : row number
 
-
-
 for qstn, num in list_qstn.items():
     frm_qstn = tk.Frame(wndw_srvy, relief=tk.RIDGE, borderwidth=3)
     # assigns the variable "frm_qstn" (frame_question) as the frame to put the labels in
@@ -62,14 +70,14 @@ for qstn, num in list_qstn.items():
 for ent, num in list_ent.items():
     frm_ent = tk.Frame(wndw_srvy, borderwidth=3)
     frm_ent.grid(row=num, column=1, padx=5, pady=5, sticky="w")
-    ent = tk.Entry(frm_inpt, width=20)
+    ent = tk.Entry(frm_ent, width=20)
     ent.pack()
 # loops for the amount of items in list_inpt,
 # and replaces the entry name as the first given variable in the list,
 # and replaces the row number as the second given variable in the list
 
 def cnfrm_sbmt():
-
+    
     wndw_cnfrm = tk.Tk()
     wndw_cnfrm.mainloop()
 # defines the command "cnfrm_sbmt" which creates a separate window
