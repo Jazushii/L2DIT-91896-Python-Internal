@@ -15,24 +15,26 @@ list_qstn = {
     "Item name:" : "3",
     "Quantity of\nitems:" : "4",
     "Date the item/s\nwill be issued:" : "5",
-    "Data the item/s\nwill be returned" : "6",
+    "Data the item/s\nwill be returned:" : "6",
 }
 # assigns the variable "list_qstn" (list_question) to the list of questions
 # and their respective rows in the first column
 # question : row number
 
-list_inpt = {
-    "nm_gvn" : "0",
-    "nm_mid" : "1",
-    "nm_lst" : "2",
-    "itm_nm" : "3",
-    "itm_num" : "4",
-    "itm_issued" : "5",
-    "itm_returned" : "6",
+list_ent = {
+    "nm_gvn_ent" : "0",
+    "nm_mid_ent" : "1",
+    "nm_lst_ent" : "2",
+    "itm_nm_ent" : "3",
+    "itm_num_ent" : "4",
+    "itm_issued_ent" : "5",
+    "itm_returned_ent" : "6",
 }
-# assigns the variable "list_inpt" (list_input) to  the list of names for the entries
+# assigns the variable "list_ent" (list_entry) to  the list of names for the entries
 # and their respective rows in the second column
 # entry name : row number
+
+
 
 for qstn, num in list_qstn.items():
     frm_qstn = tk.Frame(wndw_srvy, relief=tk.RIDGE, borderwidth=3)
@@ -57,16 +59,17 @@ for qstn, num in list_qstn.items():
 # and replaces the label text as the first given variable in the list,
 # and replaces the row number as the second given variable in the list
 
-for inpt, num in list_inpt.items():
-    frm_inpt = tk.Frame(wndw_srvy, borderwidth=3)
-    frm_inpt.grid(row=num, column=1, padx=5, pady=5, sticky="w")
-    inpt = tk.Entry(frm_inpt, width=20)
-    inpt.pack()
+for ent, num in list_ent.items():
+    frm_ent = tk.Frame(wndw_srvy, borderwidth=3)
+    frm_ent.grid(row=num, column=1, padx=5, pady=5, sticky="w")
+    ent = tk.Entry(frm_inpt, width=20)
+    ent.pack()
 # loops for the amount of items in list_inpt,
 # and replaces the entry name as the first given variable in the list,
 # and replaces the row number as the second given variable in the list
 
 def cnfrm_sbmt():
+
     wndw_cnfrm = tk.Tk()
     wndw_cnfrm.mainloop()
 # defines the command "cnfrm_sbmt" which creates a separate window
