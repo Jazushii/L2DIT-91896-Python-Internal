@@ -10,6 +10,8 @@ class Customer:
         self.itm_num = itm_num
         self.itm_issued = itm_issued
         self.itm_returned = itm_returned
+    def __str__(self):
+        return f"{self.nm_last}, {self.nm_given} {self.nm_mid}"
 
 wndw_srvy = tk.Tk()
 # assigns the variable "wdnw_srvy" (window_survey) to a window
@@ -31,23 +33,13 @@ list_qstn = {
 # and their respective rows in the first column
 # question : row number
 
-list_inpt = {
-    "nm_gvn" : "nm_gvn_ent",
-    "nm_mid" : "nm_mid_ent",
-    "nm_lst" : "nm_lst_ent",
-    "itm_nm" : "itm_nm_ent",
-    "itm_num" : "itm_num_ent",
-    "itm_issued" : "itm_issued_ent",
-    "itm_returned" : "itm_returned_ent",
-}
-
-for qstn, num in list_qstn.items():
+for qstn, row in list_qstn.items():
     frm_qstn = tk.Frame(wndw_srvy, relief=tk.RIDGE, borderwidth=3)
     # assigns the variable "frm_qstn" (frame_question) as the frame to put the labels in
     # its "master" is wdnw_srvy
     # its relief (border style) is set to ridged
     # its borderwidth is set to 3
-    frm_qstn.grid(row=num, column=0, padx=5, pady=5, sticky="w")
+    frm_qstn.grid(row=row, column=0, padx=5, pady=5, sticky="w")
     # puts frm_qstn into a grid
     # where its located in row "num", which is in the list_qstn list
     # and in column 0 (the first column)
@@ -64,20 +56,23 @@ for qstn, num in list_qstn.items():
 # and replaces the label text as the first given variable in the list,
 # and replaces the row number as the second given variable in the list
 
-for x, num in list_qstn.items():
-    frm_ent = tk.Frame(wndw_srvy, borderwidth=3)
-    frm_ent.grid(row=num, column=1, padx=5, pady=5, sticky="w")
-    ent_qstn = tk.Entry(frm_ent, width=20)
-    ent_qstn.pack()
-    print(ent_qstn)
-# loops for the amount of items in list_ent,
-# and replaces the entry name as the first given variable in the list,
-# and replaces the row number as the second given variable in the list
+frm_ent = tk.Frame(wndw_srvy, borderwidth=3)
+frm_ent.grid(row=0, column=1, padx=5, pady=5, sticky="w")
+ent_nm_gvn = tk.Entry(frm_ent, width=20)
+ent_nm_gvn.pack()
 
 def cnfrm_sbmt():
+    nm_gvn = ent_nm_gvn.get()
+    nm_mid = ent_nm_gvn.get()
+    nm_lst = ent_nm_gvn.get()
+    itm_nm = ent_nm_gvn.get()
+    itm_num = ent_nm_gvn.get()
+    itm_issued = ent_nm_gvn.get()
+    itm_returned = ent_nm_gvn.get()
     cstmr = Customer(nm_gvn, nm_mid, nm_lst, itm_nm, itm_num, itm_issued, itm_returned)
-    print(cstmr)
+
     wndw_cnfrm = tk.Tk()
+    frm_cstmr = tk.Frame()
     wndw_cnfrm.mainloop()
 # defines the command "cnfrm_sbmt" which creates a separate window
 
