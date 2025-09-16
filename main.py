@@ -58,19 +58,24 @@ for question, row in list_question.items():
 # and replaces the label text as the first given variable in the list,
 # and replaces the row number as the second given variable in the list
 
-frm_ent = tk.Frame(main_window, borderwidth=3)
-frm_ent.grid(row=0, column=1, padx=5, pady=5, sticky="w")
-ent_given_name = tk.Entry(frm_ent, width=20)
-ent_given_name.pack()
+class Entry:
+    def __init__(self, ent_name):
+        self.ent_name = ent_name
+        frm_ent = tk.Frame(main_window, borderwidth=3)
+        frm_ent.grid(row=0, column=1, padx=5, pady=5, sticky="w")
+        self.ent_name = tk.Entry(frm_ent, width=20)
+        self.ent_name.pack()
+
+ent_given_name = Entry(ent_given_name)
 
 def confirm_submit():
     given_name = ent_given_name.get()
-    mid_name = ent_mid_name.get()
-    last_name = ent_last_name.get()
-    itm_name = ent_itm_name.get()
-    itm_num = ent_itm_num.get()
-    itm_issued = ent_itm_issued.get()
-    itm_returned = ent_itm_returned.get()
+    mid_name = ent_given_name.get()
+    last_name = ent_given_name.get()
+    itm_name = ent_given_name.get()
+    itm_num = ent_given_name.get()
+    itm_issued = ent_given_name.get()
+    itm_returned = ent_given_name.get()
     ctm = Customer(given_name, mid_name, last_name, itm_name, itm_num, itm_issued, itm_returned)
 
     confirm_window = tk.Tk()
