@@ -8,19 +8,13 @@ class Customer:
         self.given_name = given_name
         self.mid_name = mid_name
         self.last_name = last_name
+        self.full_name = f"{self.last_name}, {self.given_name} {self.mid_name}"
         self.itm_name = itm_name
         self.itm_num = itm_num
         self.itm_issued = itm_issued
         self.itm_returned = itm_returned
     def __str__(self):
         return f"Customer reciept no: {self.reciept_num}\n{self.last_name}, {self.given_name} {self.mid_name}\nOrdered {self.itm_num} {self.itm_name}\nIssued on {self.itm_issued} and to be returned on {self.itm_returned}"
-
-main_window = tk.Tk()
-# assigns the variable "wdnw_srvy" (window_survey) to a window
-
-main_window.rowconfigure([0, 1, 2, 3, 4, 5, 6], minsize=25)
-main_window.columnconfigure([0, 1], minsize=25)
-# configures the grid (rows and columns)
 
 list_question = {
     "Given name:" : "0",
@@ -34,6 +28,13 @@ list_question = {
 # assigns the variable "list_qstn" (list_question) to the list of questions
 # and their respective rows in the first column
 # question : row number
+
+main_window = tk.Tk()
+# assigns the variable "wdnw_srvy" (window_survey) to a window
+
+main_window.rowconfigure([0, 1, 2, 3, 4, 5, 6], minsize=25)
+main_window.columnconfigure([0, 1], minsize=25)
+# configures the grid (rows and columns)
 
 for question, row in list_question.items():
     frm_question = tk.Frame(main_window, relief=tk.RIDGE, borderwidth=3)
@@ -105,7 +106,9 @@ def confirm_submit():
 
     confirm_window = tk.Tk()
     print(ctm)
+    print(ctm.full_name)
     frm_ctm = tk.Frame(confirm_window)
+    frm_ctm.grid(row=0, column=0, padx=5, pady=5, sticky="w")
     lbl_ctm = tk.Label(frm_ctm, text=ctm, width=20)
     lbl_ctm.pack()
     confirm_window.mainloop()
