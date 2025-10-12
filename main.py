@@ -19,10 +19,10 @@ class Customer:
 itm_name = "hi"
 
 q_list = [
-    "What is your given name? (Required)",
-    "What is your middle/s name? (Not Required)",
-    "What is your last name? (Required)",
-    "Pick an item: (If you want multiple items, will need to submit another form)",
+    "What is your given name?\n(Required)",
+    "What is your middle/s name?\n(Not Required)",
+    "What is your last name?\n(Required)",
+    "Pick an item:\n(If you want multiple items,\nwill need to submit another form)",
     f"How many {itm_name} are you issuing?",
     "Date the items will be issued:",
     "Data the items will be returned:",
@@ -30,6 +30,17 @@ q_list = [
 q_list_num = 0
 
 ent_list = [
+    "ent_given_name",
+    "ent_mid_name",
+    "ent_last_name",
+    "ent_itm_name",
+    "ent_itm_num",
+    "ent_itm_issued",
+    "ent_itm_returned",
+]
+ent_list_num = 0
+
+input_list = [
     "given_name",
     "mid_name",
     "last_name",
@@ -38,7 +49,6 @@ ent_list = [
     "itm_issued",
     "itm_returned",
 ]
-ent_list_num = 0
 
 itm_list = [
     "Eating Utensils (Spoon and Fork)",
@@ -50,69 +60,83 @@ itm_list = [
 ]
 itm_list_num = 0
 
-def next():
-    global q_list_num
-    global ent_list_num
+def error(num, type):
+    if type == "blank":
+        ent_list[num].insert(tk.END, "REQUIRED")
+    if type == "not_text":
+        ent_list[num].insert(tk.END, " ONLY LETTERS")
 
-    ent_list[ent_list_num] = ent_q.get()
+def submit():
+    for g in range(7):
+        input_list[g] = ent_list[g].get()
+    # takes the value of the entries
+    for s in range(2):
+        if input_list[s] is not str:
+            if input_list[s] == "":
+                error(s, "blank")
+            else:
+                error(s, "not_text")
+        s += 1
+    # checks of the entries put in name is a string
+    c1 = Customer(
+        input_list[0],
+        input_list[1],
+        input_list[2],
+        input_list[3],
+        input_list[4],
+        input_list[5],
+        input_list[6],
+    )
 
-    q_list_num += 1
-    ent_list_num += 1
-    q_window.destroy()
-
-main = True
-while main:
-
-    if q_list_num == 7:
-        c1 = Customer(
-            ent_list[0],
-            ent_list[1],
-            ent_list[2],
-            ent_list[3],
-            ent_list[4],
-            ent_list[5],
-            ent_list[6])
-        submit_window = tk.Tk()
-
-        submit_window.mainloop()
-        main = False
-
-    else:
-        q_window = tk.Tk()
-        # assigns the variable "q_window" (question window) to a window
-        q_window.title('Form Window')
-        # adds a title to the window
-        window_width = 800
-        window_height = 450
-        # setting up variables
-        screen_width = q_window.winfo_screenwidth()
-        screen_height = q_window.winfo_screenheight()
-        # gets the screen's dimensions
-        center_x = int(screen_width / 2 - window_width / 2)
-        center_y = int(screen_height / 2 - window_height / 2)
-        # finds the center point of the screen
-        q_window.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
-        # set the position of the window to the center of the screen'
-        q_window.resizable(False, False)
-        # does not allow to resize the window
-        q_window.rowconfigure([0, 1, 2, 3, 4, 5, 6], minsize=25)
-        q_window.columnconfigure([0, 1], minsize=25)
-        # configures the grid (rows and columns)
+form_window = tk.Tk()
+# assigns the variable "q_window" (question window) to a window
+form_window.title('Form Window')
+# adds a title to the window
+window_width = 410
+window_height = 390
+# setting up variables
+screen_width = form_window.winfo_screenwidth()
+screen_height = form_window.winfo_screenheight()
+# gets the screen's dimensions
+center_x = int(screen_width / 2 - window_width / 2)
+center_y = int(screen_height / 2 - window_height / 2)
+# finds the center point of the screen
+form_window.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
+# set the position of the window to the center of the screen'
+form_window.resizable(False, False)
+# does not allow to resize the window
+form_window.rowconfigure([0, 1, 2, 3, 4, 5, 6], minsize=25)
+form_window.columnconfigure([0, 1], minsize=25)
+# configures the grid (rows and columns)
     
+for r in range(7):
+    frm_q = tk.Frame(form_window, relief=tk.RIDGE, borderwidth=3)
+    # assigns the variable "frm_qstn" (frame_question) as the frame to put the labels in
+    # its "master" is wdnw_srvy
+    # its relief (border style) is set to ridged
+    # its borderwidth is set to 3
+    frm_q.grid(row=r, column=0, padx=5, pady=5, sticky="w")
+    # puts frm_qstn into a grid
+    # where its located in row "num", which is in the list_qstn list
+    # and in column 0 (the first column)
+    # with x and y padding to 5
+    # and sticks to "w" (west / left side)
+    lbl_q = tk.Label(frm_q, text=q_list[r])
+    # assigns the variable "lbl_qstn" (label_question) as the label
+    # its "master" is frm_qstn
+    # its text is "qstn", which is in the list_qstn list
+    # its width is set to 12
+    lbl_q.pack()
+    # runs lbl_qstn
 
-        frm_q = tk.Frame(q_window, relief=tk.RIDGE, borderwidth=3)
-        frm_q.grid(row=0, column=0, padx=5, pady=5, sticky="we")
-        lbl_q = tk.Label(frm_q, text=q_list[q_list_num], width=12)
-        lbl_q.pack()
+    frm_ent = tk.Frame(form_window, relief=tk.RIDGE, borderwidth=3)
+    frm_ent.grid(row=r, column=1, padx=5, pady=5, sticky="we")
+    ent_list[r] = tk.Entry(frm_ent, width=30)
+    ent_list[r].pack()
 
-        frm_ent = tk.Frame(q_window, relief=tk.RIDGE, borderwidth=3)
-        frm_ent.grid(row=2, column=0, padx=5, pady=5, sticky="we")
-        ent_q = tk.Entry(frm_ent, width=12)
-        ent_q.pack()
+frm_btn = tk.Frame(form_window, borderwidth=3)
+frm_btn.grid(row=7, column=1, padx=5, pady=5, sticky="e")
+btn_next = tk.Button(frm_btn, text="Sumbit", command=submit)
+btn_next.pack()
 
-        frm_btn = tk.Frame(q_window, borderwidth=3)
-        frm_btn.grid(row=3, column=0, padx=5, pady=5, sticky="e")
-        btn_next = tk.Button(frm_btn, text="Next", command=next)
-        btn_next.pack()
-
-        q_window.mainloop()
+form_window.mainloop()
