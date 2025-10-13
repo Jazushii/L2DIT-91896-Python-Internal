@@ -16,7 +16,7 @@ class Customer:
     def __str__(self):
         return f"Customer reciept no: {self.reciept_num}\n{self.last_name}, {self.given_name} {self.mid_name}\nOrdered {self.itm_num} {self.itm_name}\nIssued on {self.itm_issued} and to be returned on {self.itm_returned}"
 
-itm_name = "hi"
+itm_name = "items"
 
 q_list = [
     "What is your given name?\n(Required)",
@@ -27,7 +27,6 @@ q_list = [
     "Date the items will be issued:",
     "Data the items will be returned:",
 ]
-q_list_num = 0
 
 ent_list = [
     "ent_given_name",
@@ -38,7 +37,6 @@ ent_list = [
     "ent_itm_issued",
     "ent_itm_returned",
 ]
-ent_list_num = 0
 
 input_list = [
     "given_name",
@@ -51,16 +49,17 @@ input_list = [
 ]
 
 itm_list = [
-    "Eating Utensils (Spoon and Fork)",
-    "Glassware"
+    "Eating Utensils\n(Spoons and Forks)",
+    "Glassware",
     "Tables",
     "Chairs",
     "Party Hats",
     "Balloons",
 ]
-itm_list_num = 0
-
+error = False
 def error(num, type):
+    global error
+    error = True
     if type == "blank":
         ent_list[num].insert(tk.END, "REQUIRED")
     if type == "not_text":
@@ -78,22 +77,23 @@ def submit():
                 error(s, "not_text")
         s += 1
     # checks of the entries put in name is a string
-    c1 = Customer(
-        input_list[0],
-        input_list[1],
-        input_list[2],
-        input_list[3],
-        input_list[4],
-        input_list[5],
-        input_list[6],
+    if error == False:
+        c1 = Customer(
+            input_list[0],
+            input_list[1],
+            input_list[2],
+            input_list[3],
+            input_list[4],
+            input_list[5],
+            input_list[6],
     )
 
 form_window = tk.Tk()
 # assigns the variable "q_window" (question window) to a window
 form_window.title('Form Window')
 # adds a title to the window
-window_width = 410
-window_height = 390
+window_width = 600
+window_height = 380
 # setting up variables
 screen_width = form_window.winfo_screenwidth()
 screen_height = form_window.winfo_screenheight()
@@ -105,9 +105,6 @@ form_window.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
 # set the position of the window to the center of the screen'
 form_window.resizable(False, False)
 # does not allow to resize the window
-form_window.rowconfigure([0, 1, 2, 3, 4, 5, 6], minsize=25)
-form_window.columnconfigure([0, 1], minsize=25)
-# configures the grid (rows and columns)
     
 for r in range(7):
     frm_q = tk.Frame(form_window, relief=tk.RIDGE, borderwidth=3)
@@ -129,14 +126,24 @@ for r in range(7):
     lbl_q.pack()
     # runs lbl_qstn
 
-    frm_ent = tk.Frame(form_window, relief=tk.RIDGE, borderwidth=3)
-    frm_ent.grid(row=r, column=1, padx=5, pady=5, sticky="we")
-    ent_list[r] = tk.Entry(frm_ent, width=30)
-    ent_list[r].pack()
+    if r == 3:
+        b = 0
+        for br in range(2):
+            for bc in range(3):
+                frm_btn = tk.Frame(form_window, relief=tk.RIDGE, borderwidth=3)
+                frm_btn.grid(row=(br+3), column=(bc+1), padx=5, pady=5, sticky="we")
+                itm_list[b] = tk.Button(frm_btn, text=itm_list[b], width=15)
+                itm_list[b].pack()
+                b += 1
+    else:
+        frm_ent = tk.Frame(form_window, relief=tk.RIDGE, borderwidth=3)
+        frm_ent.grid(row=r, column=1, padx=5, pady=5, sticky="we")
+        ent_list[r] = tk.Entry(frm_ent, width=15)
+        ent_list[r].pack()
 
 frm_btn = tk.Frame(form_window, borderwidth=3)
 frm_btn.grid(row=7, column=1, padx=5, pady=5, sticky="e")
-btn_next = tk.Button(frm_btn, text="Sumbit", command=submit)
+btn_next = tk.Button(frm_btn, text="Sumbit", width=10, command=submit)
 btn_next.pack()
 
 form_window.mainloop()
