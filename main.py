@@ -48,14 +48,20 @@ input_list = [
     "itm_returned",
 ]
 
-itm_list = [
-    "Eating Utensils\n(Spoons and Forks)",
-    "Glassware",
-    "Tables",
-    "Chairs",
-    "Party Hats",
-    "Balloons",
-]
+def typing(event):
+    print(event)
+    if ent_list[0].get() == "REQUIRED":
+        ent_list[0].delete(0, tk.END)
+        ent_list[0].configure(foreground="black")
+    print('after2')
+
+def not_typing(event):
+    print('before3')
+    if ent_list[r].get() == "":
+       ent_list[r].insert(0, "REQUIRED")
+       ent_list[r].configure(foreground="gray")
+    print('after4')
+
 error = False
 def error(num, type):
     global error
@@ -70,12 +76,13 @@ def submit():
         input_list[g] = ent_list[g].get()
     # takes the value of the entries
     for s in range(2):
+        print(s)
         if input_list[s] is not str:
             if input_list[s] == "":
                 error(s, "blank")
             else:
                 error(s, "not_text")
-        s += 1
+        s += 2
     # checks of the entries put in name is a string
     if error == False:
         c1 = Customer(
@@ -126,20 +133,13 @@ for r in range(7):
     lbl_q.pack()
     # runs lbl_qstn
 
-    if r == 3:
-        b = 0
-        for br in range(2):
-            for bc in range(3):
-                frm_btn = tk.Frame(form_window, relief=tk.RIDGE, borderwidth=3)
-                frm_btn.grid(row=(br+3), column=(bc+1), padx=5, pady=5, sticky="we")
-                itm_list[b] = tk.Button(frm_btn, text=itm_list[b], width=15)
-                itm_list[b].pack()
-                b += 1
-    else:
-        frm_ent = tk.Frame(form_window, relief=tk.RIDGE, borderwidth=3)
-        frm_ent.grid(row=r, column=1, padx=5, pady=5, sticky="we")
-        ent_list[r] = tk.Entry(frm_ent, width=15)
-        ent_list[r].pack()
+    frm_ent = tk.Frame(form_window, relief=tk.RIDGE, borderwidth=3)
+    frm_ent.grid(row=r, column=1, padx=5, pady=5, sticky="we")
+    ent_list[r] = tk.Entry(frm_ent, width=15, foreground="gray")
+    ent_list[r].insert(0, "REQUIRED")
+    ent_list[r].bind("<FocusIn>", typing)
+    ent_list[r].bind("<FocusOut>", not_typing)
+    ent_list[r].pack()
 
 frm_btn = tk.Frame(form_window, borderwidth=3)
 frm_btn.grid(row=7, column=1, padx=5, pady=5, sticky="e")
