@@ -48,26 +48,15 @@ input_list = [
     "itm_returned",
 ]
 
-def typing(event):
-    print(event)
-    if ent_list[0].get() == "REQUIRED":
-        ent_list[0].delete(0, tk.END)
-        ent_list[0].configure(foreground="black")
-    print('after2')
-
-def not_typing(event):
-    print('before3')
-    if ent_list[r].get() == "":
-       ent_list[r].insert(0, "REQUIRED")
-       ent_list[r].configure(foreground="gray")
-    print('after4')
-
 error = False
 def error(num, type):
     global error
     error = True
     if type == "blank":
-        ent_list[num].insert(tk.END, "REQUIRED")
+        frm_error = tk.Frame(form_window, relief=tk.RAISED, borderwidth=3)
+        frm_error.grid(row=num, column=2, padx=5, pady=5, sticky="we")
+        lbl_error = tk.Label(frm_error, text="REQUIRED", fg='red')
+        lbl_error.pack()
     if type == "not_text":
         ent_list[num].insert(tk.END, " ONLY LETTERS")
 
@@ -99,7 +88,7 @@ form_window = tk.Tk()
 # assigns the variable "q_window" (question window) to a window
 form_window.title('Form Window')
 # adds a title to the window
-window_width = 600
+window_width = 400
 window_height = 380
 # setting up variables
 screen_width = form_window.winfo_screenwidth()
@@ -119,7 +108,7 @@ for r in range(7):
     # its "master" is wdnw_srvy
     # its relief (border style) is set to ridged
     # its borderwidth is set to 3
-    frm_q.grid(row=r, column=0, padx=5, pady=5, sticky="w")
+    frm_q.grid(row=r, column=0, padx=20, pady=5, sticky="w")
     # puts frm_qstn into a grid
     # where its located in row "num", which is in the list_qstn list
     # and in column 0 (the first column)
@@ -133,16 +122,20 @@ for r in range(7):
     lbl_q.pack()
     # runs lbl_qstn
 
-    frm_ent = tk.Frame(form_window, relief=tk.RIDGE, borderwidth=3)
+    frm_ent = tk.Frame(form_window, relief=tk.SUNKEN, borderwidth=3)
     frm_ent.grid(row=r, column=1, padx=5, pady=5, sticky="we")
-    ent_list[r] = tk.Entry(frm_ent, width=15, foreground="gray")
-    ent_list[r].insert(0, "REQUIRED")
-    ent_list[r].bind("<FocusIn>", typing)
-    ent_list[r].bind("<FocusOut>", not_typing)
+    ent_list[r] = tk.Entry(frm_ent, width=15)
     ent_list[r].pack()
 
+numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',]
+
+loop = True
+while loop:
+    if numbers.items() in ent_list[0].get():
+        ent_list[0].delete(tk.END)
+
 frm_btn = tk.Frame(form_window, borderwidth=3)
-frm_btn.grid(row=7, column=1, padx=5, pady=5, sticky="e")
+frm_btn.grid(row=7, column=2, padx=5, pady=5, sticky="e")
 btn_next = tk.Button(frm_btn, text="Sumbit", width=10, command=submit)
 btn_next.pack()
 
