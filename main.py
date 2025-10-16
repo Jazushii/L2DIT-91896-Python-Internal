@@ -50,28 +50,47 @@ input_list = [
 
 error = False
 def error(num, type):
+    print(num)
+    print(type)
     global error
     error = True
+    error_window = tk.Tk()
+    error_window.title('Error Window')
+    window_width = 100
+    screen_width = error_window.winfo_screenwidth()
+    center_x = int((screen_width / 2 - window_width / 2)+220)
+    center_y = int(screen_height / 2 - window_height / 2)
+    error_window.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
+    error_window.resizable(False, False)
+    frm_error = tk.Frame(error_window, relief=tk.RAISED, borderwidth=3)
+    frm_error.grid(row=num, column=0, padx=5, pady=5, sticky="we")
     if type == "blank":
-        frm_error = tk.Frame(form_window, relief=tk.RAISED, borderwidth=3)
-        frm_error.grid(row=num, column=2, padx=5, pady=5, sticky="we")
         lbl_error = tk.Label(frm_error, text="REQUIRED", fg='red')
         lbl_error.pack()
     if type == "not_text":
-        ent_list[num].insert(tk.END, " ONLY LETTERS")
+        lbl_error = tk.Label(frm_error, text="ONLY LETTERS", fg='red')
+        lbl_error.pack()
+    error_window.mainloop()
+
+numbers = []
+for n in range(10):
+    numbers.append(str(n))
 
 def submit():
     for g in range(7):
         input_list[g] = ent_list[g].get()
     # takes the value of the entries
+    c = 0
     for s in range(2):
-        print(s)
-        if input_list[s] is not str:
-            if input_list[s] == "":
-                error(s, "blank")
-            else:
-                error(s, "not_text")
-        s += 2
+        print(c)
+        if input_list[c] == "":
+                error(c, "blank")
+        n = 0
+        for s in range(10):
+            if numbers[n] in input_list[c]:
+                error(c, "not_text")
+            n += 1
+        c += 2
     # checks of the entries put in name is a string
     if error == False:
         c1 = Customer(
@@ -88,7 +107,7 @@ form_window = tk.Tk()
 # assigns the variable "q_window" (question window) to a window
 form_window.title('Form Window')
 # adds a title to the window
-window_width = 400
+window_width = 350
 window_height = 380
 # setting up variables
 screen_width = form_window.winfo_screenwidth()
@@ -127,15 +146,8 @@ for r in range(7):
     ent_list[r] = tk.Entry(frm_ent, width=15)
     ent_list[r].pack()
 
-numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',]
-
-loop = True
-while loop:
-    if numbers.items() in ent_list[0].get():
-        ent_list[0].delete(tk.END)
-
 frm_btn = tk.Frame(form_window, borderwidth=3)
-frm_btn.grid(row=7, column=2, padx=5, pady=5, sticky="e")
+frm_btn.grid(row=7, column=1, padx=5, pady=5, sticky="e")
 btn_next = tk.Button(frm_btn, text="Sumbit", width=10, command=submit)
 btn_next.pack()
 
