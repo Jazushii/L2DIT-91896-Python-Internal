@@ -69,6 +69,15 @@ input_list = [
     "return_day",
 ]
 
+confirm_list = [
+    "Given name:",
+    "Middle name/s:",
+    "Last name:",
+    "Item:",
+    "Amount:",
+    "Days until returned:",
+]
+
 error_list = {}
 
 has_error = False
@@ -172,14 +181,22 @@ def submit():
         confirm_window = tk.Tk()
         confirm_window.title('Confirm Window')
 
-        frm_confirm = tk.Frame(confirm_window, relief=tk.RIDGE, borderwidth=3)
-        frm_confirm.grid(row=0, column=0, padx=5, pady=5, sticky="we")
-        lbl_confirm = tk.Label(frm_confirm,
-                               text=f"ID: {c.reciept_num}\nName: {c.full_name}\nOrdered {c.itm_num} {c.itm_name}.\nTo be returned on {c.return_date}")
-        lbl_confirm.pack()
+        for r in range(6):
+            frm_confirm = tk.Frame(confirm_window, relief=tk.RIDGE, borderwidth=3)
+            frm_confirm.grid(row=r, column=0, padx=5, pady=5, sticky="we")
+            lbl_confirm = tk.Label(frm_confirm, text=confirm_list[r])
+            lbl_confirm.pack()
+            frm_confirm = tk.Frame(confirm_window, relief=tk.RIDGE, borderwidth=3)
+            frm_confirm.grid(row=r, column=1, padx=5, pady=5, sticky="we")
+            lbl_confirm = tk.Label(frm_confirm, text=input_list[r])
+            lbl_confirm.pack()
 
         frm_confirm = tk.Frame(confirm_window, borderwidth=3)
-        frm_confirm.grid(row=1, column=0, padx=5, pady=5, sticky="e")
+        frm_confirm.grid(row=7, column=0, padx=5, pady=5, sticky="w")
+        btn_confirm = tk.Button(frm_confirm, text="Cancel", width=10)
+        btn_confirm.pack()
+        frm_confirm = tk.Frame(confirm_window, borderwidth=3)
+        frm_confirm.grid(row=7, column=1, padx=5, pady=5, sticky="e")
         btn_confirm = tk.Button(frm_confirm, text="Confirm", width=10)
         btn_confirm.pack()
 
@@ -194,16 +211,16 @@ def save_file():
     if not filepath:
         return
     with open(filepath, mode="w", encoding="utf-8") as output_file:
-        text = txt_edit.get(0, tk.END)
-        output_file.write(text)
+        given_name = input_list[0]
+        output_file.write(given_name)
     form_window.title(f"Simple Text Editor - {filepath}")
 
 form_window = tk.Tk()
-# assigns the variable "q_window" (question window) to a window
+# assigns the variable "form_window" to a window
 form_window.title('Form Window')
 # adds a title to the window
 window_width = 470
-window_height = 340
+window_height = 290
 # setting up variables
 screen_width = form_window.winfo_screenwidth()
 screen_height = form_window.winfo_screenheight()
@@ -218,23 +235,20 @@ form_window.resizable(False, False)
     
 for r in range(6):
     frm_q = tk.Frame(form_window, relief=tk.RIDGE, borderwidth=3)
-    # assigns the variable "frm_qstn" (frame_question) as the frame to put the labels in
-    # its "master" is wdnw_srvy
+    # assigns the variable "frm_q" (frame_question) as the frame to put the labels in
+    # its "master" is form_window
     # its relief (border style) is set to ridged
     # its borderwidth is set to 3
     frm_q.grid(row=r, column=0, padx=20, pady=5, sticky="w")
-    # puts frm_qstn into a grid
-    # where its located in row "num", which is in the list_qstn list
+    # puts frm_q into a grid
+    # where its located in row "r", which is in the q_list list
     # and in column 0 (the first column)
     # with x and y padding to 5
     # and sticks to "w" (west / left side)
     lbl_q = tk.Label(frm_q, text=q_list[r])
-    # assigns the variable "lbl_qstn" (label_question) as the label
-    # its "master" is frm_qstn
-    # its text is "qstn", which is in the list_qstn list
-    # its width is set to 12
+    # its text is q_list[r], takes the corresponding variable from the list as text
     lbl_q.pack()
-    # runs lbl_qstn
+    # runs lbl_q
 
     frm_ent = tk.Frame(form_window, relief=tk.SUNKEN, borderwidth=3)
     frm_ent.grid(row=r, column=1, padx=5, pady=5, sticky="we")
@@ -255,3 +269,4 @@ btn_next = tk.Button(frm_btn, text="Sumbit", width=10, command=submit)
 btn_next.pack()
 
 form_window.mainloop()
+# runs and loops the form window
