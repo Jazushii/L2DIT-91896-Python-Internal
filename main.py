@@ -2,7 +2,7 @@ import tkinter as tk
 import random as rdm
 import math
 import datetime as dt
-from tkinter.filedialog import asksaveasfilename
+from tkinter.filedialog import askopenfilename, asksaveasfilename
 
 class Customer:
     def __init__(self, given_name, mid_name, last_name, itm_name, itm_num, return_day):
@@ -14,6 +14,7 @@ class Customer:
         self.itm_name = itm_name
         self.itm_num = itm_num
         self.itm_issued = dt.datetime.now()
+        # takes the date and time now
         self.return_day = int(return_day)
         self.d = int(self.itm_issued.strftime("%d"))
         self.m = self.itm_issued.strftime("%m")
@@ -23,9 +24,13 @@ class Customer:
             self.return_day = self.d + return_day
             self.return_month = self.m_int
         if (self.d + int(return_day)) >= int(month_list[self.m]):
+        # if the number of days exceeds the days in a month (ex. 34 days in October with 31 days)
             self.return_day = (self.d + return_day) - int(month_list[self.m])
+            # subtracts that number with the number of days in the month
             self.return_month = self.m_int + 1
+            # moves one month up
         self.return_date = f"{self.return_day}/{self.return_month}/{self.y}"
+        self.issue_date = f"{self.d}/{self.m}/{self.y}"
     
 month_list = {
     "1":int(31),
@@ -48,7 +53,7 @@ q_list = [
     "What is your last name?",
     "Pick an item:\n(If you want multiple items,\nwill need to submit another form)",
     "How many items are you issuing?",
-    "How many days until items returned?",
+    "How many days until items are returned?",
 ]
 
 ent_list = [
@@ -79,6 +84,7 @@ confirm_list = [
 ]
 
 error_list = {}
+# creates an empty dictionary to be used later
 
 has_error = False
 def error():
@@ -90,6 +96,7 @@ def error():
             lbl_error.pack()
     for type, num in error_list.items():
         if type == f"blank{num}":
+        # checks if the type is blank{num}, if so, executes the following command
             frm_error = tk.Frame(form_window, relief=tk.RAISED, borderwidth=3)
             frm_error.grid(row=num, column=3, padx=5, pady=5, sticky="we")
             lbl_error = tk.Label(frm_error, text="REQUIRED", fg='red')
@@ -111,57 +118,71 @@ def error():
                 lbl_error = tk.Label(frm_error, text="BETWEEEN 1 & 500", fg='red')
             if num == 5:
                 
-                lbl_error = tk.Label(frm_error, text="CANNOT BE UNDER 0", fg='red')
+                lbl_error = tk.Label(frm_error, text="CANNOT BE UNDER 1", fg='red')
             lbl_error.pack()
     has_error = False
 
 def submit():
-    print(f"{error_list}before")
     global has_error
+    global confirm_window
+    global lbl_status
+    global Cust
     error_list.clear()
     for g in range(6):
         input_list[g] = ent_list[g].get()
     # takes the value of the entries
     b = 0
     for l in range(5):
-        print(b)
         if input_list[b] == "":
             error_list.update({f"blank{b}":b})
+            # adds the following to the dictionary
             has_error = True
+            # enables "has_error" as true
         if b == 0:
             b = 1
+            # skips row 1 in the loop
         b += 1
     # to check if the entries are blank
-    c = 0
+    ac = 0
     for l in range(4):
-        alpha = sum(a.isalpha() for a in input_list[c])
-        space = sum(s.isspace() for s in input_list[c])
+        alpha = sum(a.isalpha() for a in input_list[ac])
+        # counts all the alpha symbols in the entry (letters)
+        space = sum(s.isspace() for s in input_list[ac])
+        # counts all the spaces in the entry
         sum_as = (alpha + space)
-        if sum_as != len(input_list[c]):
-            if input_list[c] != "":
-                error_list.update({f"not_text{c}":c})
+        # sums them up
+        if sum_as != len(input_list[ac]):
+        # if sum of alpha symbols and spaces is not
+        # the same as the counted symbols in the text
+        # executes code below
+            if input_list[ac] != "":
+                error_list.update({f"not_text{ac}":ac})
                 has_error = True
-        c += 1
+        ac += 1
     # to check if the entries have no numbers (except entry no. 5)
     n = 4
     for l in range(2):
         if input_list[n].isnumeric() == False:
+        # checks if there is a number in the entry, if not, executes the following code
             if input_list[n] != "":
                 error_list.update({f"not_num{n}":n})
                 has_error = True
         if input_list[n].isnumeric() == True:
+        # checks if there is a number in the entry, if so, executes the following code
             input_list[n] = int(input_list[n])
+            # makes the entry an integer so it'll work with operations
             if n == 4:
                 if input_list[n] < 1 or input_list[n] > 500:
+                # boundary checking
                     error_list.update({f"num_boundary{n}":n})
                     has_error = True
             if n == 5:
                 if input_list[n] < 1:
+                # boundary checking
                     error_list.update({f"num_boundary{n}":n})
                     has_error = True
         n += 1
-    # to check if entry 4 is an integer
-    print(f"{error_list}after")
+    # to check if entry 4 and 5 is an integer
     if has_error == True:
         error()
     else:
@@ -170,7 +191,7 @@ def submit():
             frm_error.grid(row=e, column=3, padx=5, pady=5, sticky="we")
             lbl_error = tk.Label(frm_error, text="GOOD", fg='green')
             lbl_error.pack()
-        c = Customer(
+        Cust = Customer(
             input_list[0],
             input_list[1],
             input_list[2],
@@ -178,6 +199,7 @@ def submit():
             input_list[4],
             input_list[5],
         )
+        # assigns "Cust" with the Customer class with these attributes
         confirm_window = tk.Tk()
         confirm_window.title('Confirm Window')
 
@@ -190,36 +212,58 @@ def submit():
             frm_confirm.grid(row=r, column=1, padx=5, pady=5, sticky="we")
             lbl_confirm = tk.Label(frm_confirm, text=input_list[r])
             lbl_confirm.pack()
+        frm_confirm = tk.Frame(confirm_window, relief=tk.RIDGE, borderwidth=3)
+        frm_confirm.grid(row=7, column=0, padx=5, pady=5, sticky="we")
+        lbl_confirm = tk.Label(frm_confirm, text="Item Issued:")
+        lbl_confirm.pack()
+        frm_confirm = tk.Frame(confirm_window, relief=tk.RIDGE, borderwidth=3)
+        frm_confirm.grid(row=7, column=1, padx=5, pady=5, sticky="we")
+        lbl_confirm = tk.Label(frm_confirm, text=Cust.issue_date)
+        lbl_confirm.pack()
 
         frm_confirm = tk.Frame(confirm_window, borderwidth=3)
-        frm_confirm.grid(row=7, column=0, padx=5, pady=5, sticky="w")
-        btn_confirm = tk.Button(frm_confirm, text="Cancel", width=10)
+        frm_confirm.grid(row=8, column=0, padx=5, pady=5, sticky="w")
+        btn_confirm = tk.Button(frm_confirm, text="Cancel", width=10, command=cancel)
         btn_confirm.pack()
         frm_confirm = tk.Frame(confirm_window, borderwidth=3)
-        frm_confirm.grid(row=7, column=1, padx=5, pady=5, sticky="e")
-        btn_confirm = tk.Button(frm_confirm, text="Confirm", width=10)
+        frm_confirm.grid(row=8, column=1, padx=5, pady=5, sticky="e")
+        btn_confirm = tk.Button(frm_confirm, text="Confirm", width=10, command=save_file)
         btn_confirm.pack()
+
+        frm_status = tk.Frame(confirm_window)
+        frm_status.grid(row=9, column=0, padx=5, pady=5, sticky="we")
+        lbl_status = tk.Label(frm_status, text="")
+        lbl_status.pack()
 
         confirm_window.mainloop()
 
+def cancel():
+    global confirm_window
+    confirm_window.destroy()
+    # destroys the window (closes)
+
 def save_file():
-    """Save the current file as a new file."""
+    global lbl_status
+    global Cust
+    # Save the current file as a new file.
     filepath = asksaveasfilename(
         defaultextension=".txt",
         filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")],
     )
     if not filepath:
         return
-    with open(filepath, mode="w", encoding="utf-8") as output_file:
-        given_name = input_list[0]
-        output_file.write(given_name)
+    with open(filepath, "w", encoding="utf-8") as output_file:
+        text = f"{input_list[0]}\n{input_list[1]}\n{input_list[2]}\n{input_list[3]}\n{input_list[4]}\n{input_list[5]}\n{Cust.issue_date}"
+        output_file.write(text)
+        lbl_status.config(text=f"File saved: {filepath}")
+    print("success?")
     form_window.title(f"Simple Text Editor - {filepath}")
 
 form_window = tk.Tk()
 # assigns the variable "form_window" to a window
 form_window.title('Form Window')
 # adds a title to the window
-window_width = 470
+window_width = 500
 window_height = 290
 # setting up variables
 screen_width = form_window.winfo_screenwidth()
@@ -234,6 +278,7 @@ form_window.resizable(False, False)
 # does not allow to resize the window
     
 for r in range(6):
+# loops the following code 6 times
     frm_q = tk.Frame(form_window, relief=tk.RIDGE, borderwidth=3)
     # assigns the variable "frm_q" (frame_question) as the frame to put the labels in
     # its "master" is form_window
@@ -258,14 +303,19 @@ for r in range(6):
     frm_error = tk.Frame(form_window, relief=tk.RAISED, borderwidth=3)
     frm_error.grid(row=r, column=3, padx=5, pady=5, sticky="we")
     if r == 1:
+    # if r is equal to 1, executes the following code
         lbl_error = tk.Label(frm_error, text="NOT REQUIRED")
     else:
-        lbl_error = tk.Label(frm_error, text="REQUIRED", fg='red')
+    # else, it executes this code
+        lbl_error = tk.Label(frm_error, text="REQUIRED")
     lbl_error.pack()
 
 frm_btn = tk.Frame(form_window, borderwidth=3)
 frm_btn.grid(row=7, column=1, padx=5, pady=5, sticky="e")
 btn_next = tk.Button(frm_btn, text="Sumbit", width=10, command=submit)
+# creates a button assigned to "btn_next"
+# with the text "Submit"
+# and executes command "submit" when clicked
 btn_next.pack()
 
 form_window.mainloop()
