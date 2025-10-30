@@ -2,11 +2,12 @@ import tkinter as tk
 import random as rdm
 import math
 import datetime as dt
+import os
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 
 class Customer:
     def __init__(self, given_name, mid_name, last_name, itm_name, itm_num, return_day):
-        self.reciept_num = rdm.randint(10000, 99999)
+        self.receipt_num = rdm.randint(10000, 99999)
         self.given_name = given_name
         self.mid_name = mid_name
         self.last_name = last_name
@@ -51,7 +52,7 @@ q_list = [
     "What is your given name?",
     "What is your middle name/s?",
     "What is your last name?",
-    "Pick an item:\n(If you want multiple items,\nwill need to submit another form)",
+    "Type an item:\n(If you want multiple items,\nwill need to submit another form)",
     "How many items are you issuing?",
     "How many days until items are returned?",
 ]
@@ -203,13 +204,21 @@ def submit():
         confirm_window = tk.Tk()
         confirm_window.title('Confirm Window')
 
+        frm_confirm = tk.Frame(confirm_window, relief=tk.RIDGE, borderwidth=3)
+        frm_confirm.grid(row=0, column=0, padx=5, pady=5, sticky="we")
+        lbl_confirm = tk.Label(frm_confirm, text="Reciept Number:")
+        lbl_confirm.pack()
+        frm_confirm = tk.Frame(confirm_window, relief=tk.RIDGE, borderwidth=3)
+        frm_confirm.grid(row=0, column=1, padx=5, pady=5, sticky="we")
+        lbl_confirm = tk.Label(frm_confirm, text=Cust.receipt_num)
+        lbl_confirm.pack()
         for r in range(6):
             frm_confirm = tk.Frame(confirm_window, relief=tk.RIDGE, borderwidth=3)
-            frm_confirm.grid(row=r, column=0, padx=5, pady=5, sticky="we")
+            frm_confirm.grid(row=r+1, column=0, padx=5, pady=5, sticky="we")
             lbl_confirm = tk.Label(frm_confirm, text=confirm_list[r])
             lbl_confirm.pack()
             frm_confirm = tk.Frame(confirm_window, relief=tk.RIDGE, borderwidth=3)
-            frm_confirm.grid(row=r, column=1, padx=5, pady=5, sticky="we")
+            frm_confirm.grid(row=r+1, column=1, padx=5, pady=5, sticky="we")
             lbl_confirm = tk.Label(frm_confirm, text=input_list[r])
             lbl_confirm.pack()
         frm_confirm = tk.Frame(confirm_window, relief=tk.RIDGE, borderwidth=3)
@@ -245,23 +254,41 @@ def cancel():
 def save_file():
     global lbl_status
     global Cust
-    # Save the current file as a new file.
-    filepath = asksaveasfilename(
-        defaultextension=".txt",
-        filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")],
-    )
+    # Save the current file as a new file
+    filepath = f"{Cust.receipt_num}.txt"
     if not filepath:
         return
     with open(filepath, "w", encoding="utf-8") as output_file:
-        text = f"{input_list[0]}\n{input_list[1]}\n{input_list[2]}\n{input_list[3]}\n{input_list[4]}\n{input_list[5]}\n{Cust.issue_date}"
+        text = f"{Cust.receipt_num}\n{input_list[0]}\n{input_list[1]}\n{input_list[2]}\n{input_list[3]}\n{input_list[4]}\n{input_list[5]}\n{Cust.issue_date}"
         output_file.write(text)
         lbl_status.config(text=f"File saved: {filepath}")
-    print("success?")
-    form_window.title(f"Simple Text Editor - {filepath}")
+    form_window.title(f"Party Hire - {filepath}")
+
+def del_file(del_file):
+    os.remove(del_file)
+
+def file_info(file):
+    info_window = tk.Tk()
+    info_window.title(f"{file} Info")
+    filepath = file
+    if not filepath:
+        return
+    with open(filepath, "r", encoding="utf-8") as open_file:
+        line = open_file.read()
+        frm_info = tk.Frame(info_window, relief=tk.RIDGE, borderwidth=3)
+        frm_info.grid(row=0, column=0, padx=10, pady=5, sticky="we")
+        lbl_info = tk.Label(frm_info, text=line)
+        lbl_info.pack()
+        frm_delete = tk.Frame(info_window, relief=tk.RIDGE, borderwidth=3)
+        frm_delete.grid(row=0, column=0, padx=10, pady=5, sticky="we")
+        btn_delete = tk.Label(frm_delete, text="Delete?", command=del_file(file))
+        btn_delete.pack()
+
+    info_window.mainloop()
 
 form_window = tk.Tk()
 # assigns the variable "form_window" to a window
-form_window.title('Form Window')
+form_window.title('Party Hire')
 # adds a title to the window
 window_width = 500
 window_height = 290
@@ -312,11 +339,33 @@ for r in range(6):
 
 frm_btn = tk.Frame(form_window, borderwidth=3)
 frm_btn.grid(row=7, column=1, padx=5, pady=5, sticky="e")
-btn_next = tk.Button(frm_btn, text="Sumbit", width=10, command=submit)
+btn_next = tk.Button(frm_btn, text="Submit", width=10, command=submit)
 # creates a button assigned to "btn_next"
 # with the text "Submit"
 # and executes command "submit" when clicked
 btn_next.pack()
+
+files_window = tk.Tk()
+files_window.title('Saved Files')
+
+path = os.getcwd()
+cust_files = []
+for f in os.listdir(path):
+    if f.endswith(".txt"):
+        cust_files.append(f)
+
+frm_files = tk.Frame(files_window, relief=tk.RIDGE, borderwidth=3)
+frm_files.grid(row=0, column=0, padx=10, pady=5, sticky="we")
+lbl_files = tk.Label(frm_files, text="Pick a file to open:")
+lbl_files.pack()
+if len(cust_files) != 0:
+    for cf in range(len(cust_files)):
+        frm_list = tk.Frame(files_window, borderwidth=3)
+        frm_list.grid(row=(cf+1), column=0, padx=10, pady=5, sticky="we")
+        btn_list = tk.Button(frm_list, text=cust_files[cf], command=file_info(cust_files[cf]))
+        btn_list.pack()
+
+files_window.mainloop()
 
 form_window.mainloop()
 # runs and loops the form window
