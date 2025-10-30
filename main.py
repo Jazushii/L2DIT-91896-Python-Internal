@@ -85,6 +85,8 @@ confirm_list = [
 error_list = {}
 # creates an empty dictionary to be used later
 
+cust_files = []
+
 has_error = False
 def error():
     global has_error
@@ -262,6 +264,7 @@ def save_file():
         lbl_status.config(text=f"File saved: {filepath}")
     
     path = os.getcwd()
+    cust_files.clear()
     print(f"{cust_files}0save")
     for f in os.listdir(path):
         if f.endswith(".txt"):
@@ -272,11 +275,11 @@ def save_file():
         for cf in range(len(cust_files)):
             frm_list = tk.Frame(files_window, borderwidth=3)
             frm_list.grid(row=(cf+1), column=0, padx=10, pady=5, sticky="we")
-            btn_list = tk.Button(frm_list, text=cust_files[cf], command=lambda: file_info(cust_files[cf], cf))
+            btn_list = tk.Button(frm_list, text=cust_files[cf], command=lambda cf=cf: file_info(cust_files[cf]))
             btn_list.pack()
             frm_delete = tk.Frame(files_window)
             frm_delete.grid(row=(cf+1), column=2, padx=10, pady=5, sticky="we")
-            btn_delete = tk.Button(frm_delete, text="Delete?", command=lambda: del_file(cust_files[cf]))
+            btn_delete = tk.Button(frm_delete, text="Delete?", command=lambda cf=cf: del_file(cust_files[cf]))
             btn_delete.pack()
     confirm_window.destroy()
     for r in range(6):
@@ -297,12 +300,12 @@ def save_file():
 
 
 def file_info(file):
+    print(file)
     info_window = tk.Tk()
     info_window.title(f"{file} Info")
-    filepath = file
-    if not filepath:
+    if not file:
         return
-    with open(filepath, "r", encoding="utf-8") as open_file:
+    with open(file, "r", encoding="utf-8") as open_file:
         line = open_file.read()
     frm_info = tk.Frame(info_window, relief=tk.RIDGE, borderwidth=3)
     frm_info.grid(row=0, column=0, padx=10, pady=5, sticky="we")
@@ -314,6 +317,7 @@ def file_info(file):
 def del_file(del_file):
     global cust_files
     global files_window
+    print(del_file)
     os.remove(del_file)
     print(f"{cust_files}0del")
     cust_files.remove(del_file)
@@ -333,7 +337,7 @@ def files():
     lbl_files.pack()
 
     path = os.getcwd()
-    cust_files = []
+    cust_files.clear()
     print(f"{cust_files}0open")
     for f in os.listdir(path):
         if f.endswith(".txt"):
@@ -344,11 +348,11 @@ def files():
         for cf in range(len(cust_files)):
             frm_list = tk.Frame(files_window, borderwidth=3)
             frm_list.grid(row=(cf+1), column=0, padx=10, pady=5, sticky="we")
-            btn_list = tk.Button(frm_list, text=cust_files[cf], command=lambda: file_info(cust_files[cf]))
+            btn_list = tk.Button(frm_list, text=cust_files[cf], command=lambda cf=cf: file_info(cust_files[cf]))
             btn_list.pack()
             frm_delete = tk.Frame(files_window)
             frm_delete.grid(row=(cf+1), column=2, padx=10, pady=5, sticky="we")
-            btn_delete = tk.Button(frm_delete, text="Delete?", command=lambda: del_file(cust_files[cf]))
+            btn_delete = tk.Button(frm_delete, text="Delete?", command=lambda cf=cf: del_file(cust_files[cf]))
             btn_delete.pack()
 
     files_window.mainloop()
@@ -357,7 +361,7 @@ form_window = tk.Tk()
 # assigns the variable "form_window" to a window
 form_window.title('Party Hire')
 # adds a title to the window
-window_width = 500
+window_width = 530
 window_height = 290
 # setting up variables
 screen_width = form_window.winfo_screenwidth()
