@@ -257,13 +257,44 @@ def save_file():
     if not filepath:
         return
     with open(filepath, "w", encoding="utf-8") as output_file:
-        text = f"{Cust.receipt_num}\n{input_list[0]}\n{input_list[1]}\n{input_list[2]}\n{input_list[3]}\n{input_list[4]}\n{input_list[5]}\n{Cust.issue_date}"
+        text = f"Receipt No. {Cust.receipt_num}\n{input_list[2]}, {input_list[0]} {input_list[1]}\nOrdered {input_list[4]} {input_list[3]}\nIssued on {Cust.issue_date}\n and to be returned in {input_list[5]} days"
         output_file.write(text)
         lbl_status.config(text=f"File saved: {filepath}")
-    form_window.title(f"Party Hire - {filepath}")
+    
+    path = os.getcwd()
+    print(f"{cust_files}0save")
+    for f in os.listdir(path):
+        if f.endswith(".txt"):
+            cust_files.append(f)
+            print(f"{cust_files}1save")
 
-def del_file(del_file):
-    os.remove(del_file)
+    if len(cust_files) != 0:
+        for cf in range(len(cust_files)):
+            frm_list = tk.Frame(files_window, borderwidth=3)
+            frm_list.grid(row=(cf+1), column=0, padx=10, pady=5, sticky="we")
+            btn_list = tk.Button(frm_list, text=cust_files[cf], command=lambda: file_info(cust_files[cf], cf))
+            btn_list.pack()
+            frm_delete = tk.Frame(files_window)
+            frm_delete.grid(row=(cf+1), column=2, padx=10, pady=5, sticky="we")
+            btn_delete = tk.Button(frm_delete, text="Delete?", command=lambda: del_file(cust_files[cf]))
+            btn_delete.pack()
+    confirm_window.destroy()
+    for r in range(6):
+        frm_ent = tk.Frame(form_window, relief=tk.SUNKEN, borderwidth=3)
+        frm_ent.grid(row=r, column=1, padx=5, pady=5, sticky="we")
+        ent_list[r] = tk.Entry(frm_ent, width=15)
+        ent_list[r].pack()
+
+        frm_error = tk.Frame(form_window, relief=tk.RAISED, borderwidth=3)
+        frm_error.grid(row=r, column=3, padx=5, pady=5, sticky="we")
+        if r == 1:
+        # if r is equal to 1, executes the following code
+            lbl_error = tk.Label(frm_error, text="NOT REQUIRED")
+        else:
+        # else, it executes this code
+            lbl_error = tk.Label(frm_error, text="REQUIRED")
+        lbl_error.pack()
+
 
 def file_info(file):
     info_window = tk.Tk()
@@ -273,16 +304,54 @@ def file_info(file):
         return
     with open(filepath, "r", encoding="utf-8") as open_file:
         line = open_file.read()
-        frm_info = tk.Frame(info_window, relief=tk.RIDGE, borderwidth=3)
-        frm_info.grid(row=0, column=0, padx=10, pady=5, sticky="we")
-        lbl_info = tk.Label(frm_info, text=line)
-        lbl_info.pack()
-        frm_delete = tk.Frame(info_window, relief=tk.RIDGE, borderwidth=3)
-        frm_delete.grid(row=0, column=0, padx=10, pady=5, sticky="we")
-        btn_delete = tk.Label(frm_delete, text="Delete?", command=del_file(file))
-        btn_delete.pack()
+    frm_info = tk.Frame(info_window, relief=tk.RIDGE, borderwidth=3)
+    frm_info.grid(row=0, column=0, padx=10, pady=5, sticky="we")
+    lbl_info = tk.Label(frm_info, text=line)
+    lbl_info.pack()
 
     info_window.mainloop()
+
+def del_file(del_file):
+    global cust_files
+    global files_window
+    os.remove(del_file)
+    print(f"{cust_files}0del")
+    cust_files.remove(del_file)
+    print(f"{cust_files}1del")
+    files_window.destroy()
+    files()
+
+def files():
+    global cust_files
+    global files_window
+    files_window = tk.Tk()
+    files_window.title('Saved Files')
+
+    frm_files = tk.Frame(files_window, relief=tk.RIDGE, borderwidth=3)
+    frm_files.grid(row=0, column=0, padx=10, pady=5, sticky="we")
+    lbl_files = tk.Label(frm_files, text="Pick a file to open:")
+    lbl_files.pack()
+
+    path = os.getcwd()
+    cust_files = []
+    print(f"{cust_files}0open")
+    for f in os.listdir(path):
+        if f.endswith(".txt"):
+            cust_files.append(f)
+            print(f"{cust_files}1open")
+
+    if len(cust_files) != 0:
+        for cf in range(len(cust_files)):
+            frm_list = tk.Frame(files_window, borderwidth=3)
+            frm_list.grid(row=(cf+1), column=0, padx=10, pady=5, sticky="we")
+            btn_list = tk.Button(frm_list, text=cust_files[cf], command=lambda: file_info(cust_files[cf]))
+            btn_list.pack()
+            frm_delete = tk.Frame(files_window)
+            frm_delete.grid(row=(cf+1), column=2, padx=10, pady=5, sticky="we")
+            btn_delete = tk.Button(frm_delete, text="Delete?", command=lambda: del_file(cust_files[cf]))
+            btn_delete.pack()
+
+    files_window.mainloop()
 
 form_window = tk.Tk()
 # assigns the variable "form_window" to a window
@@ -343,27 +412,7 @@ btn_next = tk.Button(frm_btn, text="Submit", width=10, command=submit)
 # and executes command "submit" when clicked
 btn_next.pack()
 
-files_window = tk.Tk()
-files_window.title('Saved Files')
-
-path = os.getcwd()
-cust_files = []
-for f in os.listdir(path):
-    if f.endswith(".txt"):
-        cust_files.append(f)
-
-frm_files = tk.Frame(files_window, relief=tk.RIDGE, borderwidth=3)
-frm_files.grid(row=0, column=0, padx=10, pady=5, sticky="we")
-lbl_files = tk.Label(frm_files, text="Pick a file to open:")
-lbl_files.pack()
-if len(cust_files) != 0:
-    for cf in range(len(cust_files)):
-        frm_list = tk.Frame(files_window, borderwidth=3)
-        frm_list.grid(row=(cf+1), column=0, padx=10, pady=5, sticky="we")
-        btn_list = tk.Button(frm_list, text=cust_files[cf], command=file_info(cust_files[cf]))
-        btn_list.pack()
-
-files_window.mainloop()
+files()
 
 form_window.mainloop()
 # runs and loops the form window
