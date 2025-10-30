@@ -1,9 +1,7 @@
 import tkinter as tk
 import random as rdm
-import math
 import datetime as dt
 import os
-from tkinter.filedialog import askopenfilename, asksaveasfilename
 
 class Customer:
     def __init__(self, given_name, mid_name, last_name, itm_name, itm_num, return_day):
